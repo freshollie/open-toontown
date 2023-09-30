@@ -9,7 +9,8 @@ from direct.directnotify import DirectNotifyGlobal
 
 class NameGenerator:
     text = TextNode('text')
-    text.setFont(ToontownGlobals.getInterfaceFont())
+    if game.process == 'client':
+        text.setFont(ToontownGlobals.getInterfaceFont())
     notify = DirectNotifyGlobal.directNotify.newCategory('NameGenerator')
     boyTitles = []
     girlTitles = []

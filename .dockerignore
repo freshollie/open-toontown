@@ -1,0 +1,3 @@
+resources/**/*
+!resources/*/dna
+!resources/phase_3/etc

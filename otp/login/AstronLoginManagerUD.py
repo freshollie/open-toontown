@@ -43,7 +43,6 @@ class DeveloperAccountDB(AccountDB):
 
     def __init__(self, loginManager):
         AccountDB.__init__(self, loginManager)
-
         # Setup the accountToId dictionary
         self.accountDbFilePath = config.GetString('accountdb-local-file', 'astron/databases/accounts.json')
         # Load the JSON file if it exists.
