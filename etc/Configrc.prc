@@ -101,3 +101,4 @@ server-data-folder data
 # TEMPORARY
 skip-friend-quest true
 skip-phone-quest true
+game-server 192.168.1.215

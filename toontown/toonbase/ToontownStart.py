@@ -113,6 +113,93 @@ del tempLoader
 version.cleanup()
 del version
 builtins.loader = base.loader
+
+'''
+"Injector"
+added by freshollie
+Works exactly like the conventional injector
+Also includes modloader. Any files places in mods/ will
+be attempted to execute
+'''
+
+import tkinter
+import traceback
+import os
+import __main__
+
+
+class Injector(object):
+    def __init__(self):
+        self.firstTick = True
+        self.loading = None
+        self.root = tkinter.Tk()
+        title = 'Injector'
+        self.root.title(title)
+
+        f = tkinter.Frame(self.root)
+        f.pack()
+
+        xscrollbar = tkinter.Scrollbar(f, orient=tkinter.HORIZONTAL)
+        xscrollbar.grid(row=1, column=0, sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
+
+        yscrollbar = tkinter.Scrollbar(f)
+        yscrollbar.grid(row=0, column=1, sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
+
+        self.text = tkinter.Text(f, wrap=tkinter.NONE,
+                                 xscrollcommand=xscrollbar.set,
+                                 yscrollcommand=yscrollbar.set)
+        self.text.bind("<Control-Key-a>", self.select_all)
+        self.text.bind("<Control-Key-A>", self.select_all)
+        self.text.grid(row=0, column=0)
+
+        xscrollbar.config(command=self.text.xview)
+        yscrollbar.config(command=self.text.yview)
+
+        self.button = tkinter.Button(self.root, text='Inject', command=self.pressed)
+        self.button.pack()
+
+    def select_all(self, event):
+        self.text.tag_add(tkinter.SEL, "1.0", tkinter.END)
+        self.text.mark_set(tkinter.INSERT, "1.0")
+        self.text.see(tkinter.INSERT)
+        return 'break'
+
+    def pressed(self):
+        exec(injection, globals())
+
+    def loadScripts(self):
+        if not os.path.exists('mods'):
+            os.makedirs('mods')
+        for scriptName in os.listdir('mods'):
+            split = scriptName.split('.')
+            if len(split) > 1:
+                try:
+                    exec(open('mods/' + scriptName).read(), globals())
+                except Exception as err:
+                    print(traceback.format_exc())
+        self.firstTick = False
+
+    def tick(self, task):
+        if self.firstTick:
+            self.loadScripts()
+            self.firstTick = False
+        else:
+            self.root.update()
+        return task.cont
+
+
+injector = Injector()
+
+injection = '''
+try:
+    contents = injector.text.get(1.0, tkinter.END)
+    exec(contents,globals(),locals())
+except Exception as err:
+    import traceback
+    print(traceback.format_exc())
+'''
+taskMgr.add(injector.tick, 'test')
+
 autoRun = ConfigVariableBool('toontown-auto-run', 1)
 if autoRun and launcher.isDummy() and (not Thread.isTrueThreads() or __name__ == '__main__'):
     try:

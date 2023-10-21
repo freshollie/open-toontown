@@ -4,10 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"panda3d" = {file = "../panda3d/panda3d-1.11.0-cp39-cp39-macosx_10_9_x86_64.whl", sys_platform = "== 'darwin'"}
-pyyaml = "*"
-semidbm = "*"
+"panda3d" = {file = "../panda3d/panda3d-1.11.0-cp38-cp38-linux_x86_64.whl", sys_platform = "== 'linux'"}
 pytz = "*"
+future = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.8"
